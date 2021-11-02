@@ -5,8 +5,6 @@ import { Accordion, Card } from "react-bootstrap";
 import swal from "sweetalert2";
 import sqliteParser from "sqlite-parser";
 
-import moment from "moment";
-
 import Https from "../../libs/Https";
 import Wizard from "../pages/Wizard";
 
@@ -34,7 +32,6 @@ const Editor = () => {
   };
 
   const handleSubmit = async (query) => {
-    console.log(moment().format("LLL"));
     let db = await queryParser(query.query);
     db = db.toUpperCase();
     let url;
@@ -87,6 +84,7 @@ const Editor = () => {
         });
       }
       await getLogs();
+      await getTables();
     }
   };
 
