@@ -19,10 +19,18 @@ const Editor = () => {
       let sts = ast.statement[0];
       if (sts.variant === "create") {
         return sts.name.name.split(".")[0].trim();
-      } else if (sts.variant === "insert" || sts.variant === "update") {
+      } else if (sts.variant === "insert") {
         return sts.into.name.split(".")[0].trim();
-      } else if (sts.variant === "delete" || sts.variant === "select") {
+      } else if(sts.variant === "update") {
+        return sts.into.name.split(".")[0].trim();
+      } else if (sts.variant === "delete") {
         return sts.from.name.split(".")[0].trim();
+      } else if (sts.variant === "select") {
+        if (sts.from.variant === "join") {
+          return "co";
+        } else {
+          return sts.from.name.split(".")[0].trim();
+        }
       } else if (sts.variant === "drop") {
         return sts.target.name.split(".")[0].trim();
       }
@@ -34,6 +42,7 @@ const Editor = () => {
   const handleSubmit = async (query) => {
     let db = await queryParser(query.query);
     db = db.toUpperCase();
+    console.log(db);
     let url;
     if (db === "VM") {
       url = process.env.REACT_APP_URL_SERVER_VICTOR;
