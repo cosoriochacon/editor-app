@@ -42,7 +42,6 @@ const Editor = () => {
   const handleSubmit = async (query) => {
     let db = await queryParser(query.query);
     db = db.toUpperCase();
-    console.log(db);
     let url;
     if (db === "VM") {
       url = process.env.REACT_APP_URL_SERVER_VICTOR;
@@ -66,7 +65,8 @@ const Editor = () => {
     }
 
     if (url !== undefined) {
-      const res = await Https.postRemote(url + "/parseQuery", query);
+      let body = {query: query.query, origin: "co"};
+      const res = await Https.postRemote(url + "/parseQuery", body);
       await addLog(res);
       setTable(res.table);
       if (res.status === 1) {
@@ -121,7 +121,7 @@ const Editor = () => {
     <div style={{ margin: "20px" }}>
       <div className="row">
         <div className="col-3">
-          <div className="card">
+          <div className="card overflow-auto" style={{ width: "300px", height: "400px" }}>
             <div className="card-body">
               <h5 className="card-title">Tables</h5>
               {tables.length > 0 ? (
@@ -181,6 +181,9 @@ const Editor = () => {
                     <div className="d-flex justify-content-end">
                       <button type="submit" className="btn btn-primary">
                         EXECUTE QUERY
+                      </button>
+                      <button type="button" className="btn btn-warning" onClick={()=>document.getElementById("query").value = ""}>
+                        CLEAN CONSOLE
                       </button>
                     </div>
                   </form>
